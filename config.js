@@ -30,7 +30,7 @@ module.exports = function(start) {
     distDir: 'dist',
 
     // Number of posts on landing page
-    postsOnLandingPage: 2,
+    postsOnLandingPage: 3,
 
     // Date format string for post publication dates,
     // anything from http://momentjs.com/docs/#/displaying/format/ works
