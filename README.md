@@ -28,7 +28,7 @@ Also check under `/includes`. By default everything under `/posts` will be copie
 
 Posts need to be in the following format or else:
 
-```md
+```markdown
 date: YYYY-MM-DD hh:mm
 title: My blog post
 
