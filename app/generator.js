@@ -60,23 +60,30 @@ function sortPosts(data) {
   });
 }
 
+function generateArchives(data) {
+  return new Promise(function(resolve, reject) {
+    var months = utils.collectMonths(data.posts);
+    resolve(_.extend(data, { archiveMonths: months }));
+  });
+}
+
 /**
  *
  */
 function createArchives(data) {
+  debugger;
   return new Promise(function(resolve, reject) {
-    var months = utils.collectMonths(data.posts),
-        fileWrites = [],
+    var fileWrites = [],
         config = _.cloneDeep(data.config),
         month;
-    for (month in months) {
-      fileWrites.push(_createListing(months[month], month + '.html', data)
+    for (month in data.archiveMonths) {
+      fileWrites.push(_createListing(data.archiveMonths[month], month + '.html', data)
         .then(_appendArchiveLinks)
         .then(_writeListingToFile)
       );
     }
-    Promise.all(fileWrites).then(function(results) {
-      resolve(_.extend(data, { archiveMonths: months }));
+    Promise.all(fileWrites).then(function() {
+      resolve(data);
     });
   });
 }
@@ -96,8 +103,11 @@ function createLanding(data) {
 }
 
 function done(data) {
-  console.log('\nAll done! "' + data.config.blogTitle + '" compiled to /' + data.config.distDir + '.',
-    '\nThanks for using OSBE. Support your local micro breweries.\n\n  Cheers, @anttti\n');
+  var now = new Date().getTime(),
+      delta = (now - data.config.start) / 1000;
+  console.log('\nAll done! "' + data.config.blogTitle + '" compiled to /' + data.config.distDir + '.\n' +
+    'Compilation took', delta, 'seconds.\n' +
+    'Thanks for using OSBE. Support your local micro breweries.\n\n  Cheers, @anttti\n');
 }
 
 /////////////////////
@@ -174,9 +184,9 @@ function _compilePost(config) {
  */
 function _createListing(posts, fileName, data) {
   var listingIncDir = path.join(data.config.includes.dir, data.config.includes.listing.dir),
-      listingHeader = fs.readFileSync(path.join(listingIncDir, data.config.includes.listing.header), 'utf-8'),
-      listingFooter = fs.readFileSync(path.join(listingIncDir, data.config.includes.listing.footer), 'utf-8'),
-      listingPost = fs.readFileSync(path.join(listingIncDir, data.config.includes.listing.post), 'utf-8');
+      listingHeader = utils.getPart(path.join(listingIncDir, data.config.includes.listing.header)),
+      listingFooter = utils.getPart(path.join(listingIncDir, data.config.includes.listing.footer)),
+      listingPost = utils.getPart(path.join(listingIncDir, data.config.includes.listing.post));
 
   return new Promise(function(resolve, reject) {
     var listingPageHtml = utils.replaceTags(listingHeader, { blogTitle: data.config.blogTitle });
@@ -192,6 +202,9 @@ function _createListing(posts, fileName, data) {
   });
 }
 
+/**
+ * Generate and append archive page links
+ */
 function _appendArchiveLinks(listing) {
   return new Promise(function(resolve, reject) {
     var archives = '<ul>', month;
@@ -220,6 +233,7 @@ module.exports = {
   copyPosts: copyPosts,
   processPosts: processPosts,
   sortPosts: sortPosts,
+  generateArchives: generateArchives,
   createArchives: createArchives,
   createLanding: createLanding,
   done: done
