@@ -4,6 +4,10 @@ const
   ncp = require('ncp'),
   Promise = require('bluebird');
 
+/**
+ * Recursively walk through a directory
+ * and return a list of files
+ */
 var walk = function(dir, done) {
   var results = [];
   fs.readdir(dir, function(err, list) {
@@ -31,6 +35,10 @@ function isMarkdownFile(filePath) {
   return /.md$/.test(filePath);
 }
 
+/**
+ * Read a 'part' (header, footer) file from disk
+ * and cache it in memory
+ */
 var parts = {};
 function getPart(part) {
   if (parts[part]) {
@@ -56,6 +64,9 @@ function last(num, arr) {
   return arr.slice(arr.length - num, arr.length);
 }
 
+/**
+ * Synchronously delete a directory and it's subdirectories
+ */
 function deleteDir(dir) {
   if (fs.existsSync(dir)) {
     fs.readdirSync(dir).forEach(function(file, index) {
@@ -70,11 +81,25 @@ function deleteDir(dir) {
   }
 };
 
+/**
+ * Replace all tags in the given text
+ * Parameter 'tags' is an object with keys corresponding
+ * to the tags and values to the strings to replace with
+ */
+function replaceTags(text, tags) {
+  for (var tag in tags) {
+    var re = new RegExp('{{' + tag + '}}', 'g');
+    text = text.replace(re, tags[tag]);
+  }
+  return text;
+}
+
 module.exports = {
   walk: walk,
   isMarkdownFile: isMarkdownFile,
   getPart: getPart,
   first: first,
   last: last,
-  deleteDir: deleteDir
+  deleteDir: deleteDir,
+  replaceTags: replaceTags
 };

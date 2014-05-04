@@ -5,7 +5,7 @@ module.exports = {
   // Directory from which .md files are processed
   postDir: 'posts',
 
-  // Include directory (headers, footers)
+  // Include directories and files (headers, footers)
   includes: {
     dir: 'includes',
     post: {

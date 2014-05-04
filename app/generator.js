@@ -8,6 +8,9 @@ const
   ncp = require('ncp'),
   utils = require('./utils');
 
+/**
+ * Copy the whole /posts -dir to /dist
+ */
 function copyPosts(settings) {
   return new Promise(function(resolve, reject) {
     utils.deleteDir(settings.distDir);
@@ -21,12 +24,16 @@ function copyPosts(settings) {
   });
 }
 
+// TODO: Create archive pages (Yearly? Monthly?)
 function createArchives(settings) {
   return new Promise(function(resolve, reject) {
     resolve(settings);
   });
 }
 
+/**
+ * Generate the landing page with X last post excerpts
+ */
 function createLanding(settings) {
   var landingIncDir = path.join(settings.includes.dir, settings.includes.landing.dir),
       landingHeader = fs.readFileSync(path.join(landingIncDir, settings.includes.landing.header), 'utf-8'),
@@ -51,6 +58,9 @@ function createLanding(settings) {
   });
 }
 
+/**
+ * Transform all .md files under /dist into .html
+ */
 function processPosts(settings) {
   var postIncDir = path.join(settings.includes.dir, settings.includes.post.dir),
       postHeader = fs.readFileSync(path.join(postIncDir, settings.includes.post.header), 'utf-8'),
@@ -62,7 +72,7 @@ function processPosts(settings) {
 
       var posts = [];
       filePaths.filter(utils.isMarkdownFile).forEach(function(filePath) {
-        posts.push(_getPostContent(filePath, settings).then(_writePost));
+        posts.push(_getPostContent(filePath, settings).then(_writePostToFile));
       });
       Promise.all(posts).then(function(results) {
         delete settings.post;
@@ -72,6 +82,9 @@ function processPosts(settings) {
   });
 }
 
+/**
+ * Sort posts chronologically
+ */
 function sortPosts(settings) {
   return new Promise(function(resolve, reject) {
     settings.posts = settings.posts.sort(function(a, b) { return b.timestamp - a.timestamp; });
@@ -79,6 +92,10 @@ function sortPosts(settings) {
   });
 }
 
+/**
+ * Read a single .md file from the dist and
+ * convert it into HTML
+ */
 function _getPostContent(filePath, settings) {
   return new Promise(function(resolve, reject) {
     fs.readFile(filePath, 'utf-8', function(err, text) {
@@ -100,7 +117,10 @@ function _getPostContent(filePath, settings) {
   });
 }
 
-function _writePost(settings) {
+/**
+ * Write a single post to file
+ */
+function _writePostToFile(settings) {
   return new Promise(function(resolve, reject) {
     var postHtml = _compilePost(settings),
         postHtmlFileName = settings.post.filePath.replace('.md', '.html'),
@@ -119,16 +139,19 @@ function _writePost(settings) {
   });
 }
 
+/**
+ * Compile a post by concatenating a header, the actual post content
+ * and a footer. Go through the file and replace {{tags}}.
+ */
 function _compilePost(settings) {
   var postIncDir = path.join(settings.includes.dir, settings.includes.post.dir),
       postHeader = utils.getPart(path.join(postIncDir, settings.includes.post.header)),
       postFooter = utils.getPart(path.join(postIncDir, settings.includes.post.footer));
-      postHtml = '';
+      postHtml = postHeader + settings.post.text + postFooter;
 
-  postHtml += postHeader.replace(/{{title}}/g, settings.post.title)
-                        .replace(/{{blogTitle}}/g, settings.blogTitle);
-  postHtml += settings.post.text;
-  postHtml += postFooter.replace(/{{date}}/g, settings.post.date);
+  postHtml = utils.replaceTags(postHtml, { title: settings.post.title,
+                                           blogTitle: settings.blogTitle,  
+                                           date: settings.post.date });
 
   return postHtml;
 }
