@@ -60,6 +60,9 @@ function sortPosts(data) {
   });
 }
 
+/**
+ * Collect posts to months
+ */
 function generateArchives(data) {
   return new Promise(function(resolve, reject) {
     var months = utils.collectMonths(data.posts);
@@ -68,10 +71,9 @@ function generateArchives(data) {
 }
 
 /**
- *
+ * Create the actual archive HTML pages
  */
 function createArchives(data) {
-  debugger;
   return new Promise(function(resolve, reject) {
     var fileWrites = [],
         config = _.cloneDeep(data.config),
@@ -102,6 +104,9 @@ function createLanding(data) {
   });
 }
 
+/**
+ * Copy static resources to /dist
+ */
 function copyResources(data) {
   return new Promise(function(resolve, reject) {
     ncp(data.config.resourceDir, data.config.distDir, function(err) {
@@ -114,6 +119,9 @@ function copyResources(data) {
   });
 }
 
+/**
+ * Print out some benchmarking data and greets when doen
+ */
 function done(data) {
   var now = new Date().getTime(),
       delta = (now - data.config.start) / 1000;
