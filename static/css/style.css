@@ -8,9 +8,13 @@ html {
 }
 
 body {
-  margin: 1em auto;
-  padding: 0 1em;
-  max-width: 700px;
+  margin: 0;
+}
+
+.content {
+  max-width: 700px; 
+  padding: 0 10%;
+  margin: 0 auto;
 }
 
 article,
@@ -52,16 +56,6 @@ strong {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Open Sans Condensed';
-}
-
-h1.site-header {
-  font-size: 3.5em;
-  margin: 0.67em 0;
-}
-
-h1.site-header a {
-  color: rgba(0,0,0,0.7);
-  text-decoration: none;
 }
 
 h2.post--title {
@@ -133,7 +127,7 @@ figure {
 }
 
 hr {
-  margin: 3.7em 3em 3em 3em;
+  margin: 3.7em 5% 3em 5%;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   height: 1px;
@@ -257,4 +251,65 @@ table {
 td,
 th {
   padding: 0;
+}
+
+/* Site header
+   ========================================================================== */
+
+.site-header {
+  padding: 1em 0;
+  margin-bottom: 3em;
+  background: #11acd3;
+  color: white;
+}
+
+  .site-header--title {
+    font-size: 3.5em;
+  }
+
+    .site-header--title a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .site-header--title a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+
+/* Post page
+   ========================================================================== */
+
+.post h1 {
+  font-size: 2em;
+}
+
+.post-page .site-footer {
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Site footer
+   ========================================================================== */
+
+.site-footer {
+  margin: 5em auto 0 auto;
+  padding: 0 0 5em 0;
+  font-size: 70%;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(0,0,0,0.3);
+}
+
+  .site-footer--separator {
+    margin-top: 0;
+    margin-bottom: 5em;
+  }
+
+/* Archives
+   ========================================================================== */
+
+.archives {
+  padding: 0;
+  list-style-type: none;
 }
