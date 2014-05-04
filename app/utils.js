@@ -25,19 +25,6 @@ var walk = function(dir, done) {
       });
     });
   });
-};
-
-function copyPosts(settings) {
-  return new Promise(function(resolve, reject) {
-    _deleteDir(settings.distDir);
-    ncp(settings.postDir, settings.distDir, function(err) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(settings);
-      }
-    });
-  });
 }
 
 function isMarkdownFile(filePath) {
@@ -61,12 +48,12 @@ function last(num, arr) {
   return arr.slice(arr.length - num, arr.length);
 }
 
-function _deleteDir(dir) {
+function deleteDir(dir) {
   if (fs.existsSync(dir)) {
     fs.readdirSync(dir).forEach(function(file, index) {
       var currentDir = path.join(dir, file);
         if (fs.statSync(currentDir).isDirectory()) {
-           _deleteDir(currentDir);
+           deleteDir(currentDir);
         } else {
           fs.unlinkSync(currentDir);
         }
@@ -76,9 +63,9 @@ function _deleteDir(dir) {
 };
 
 module.exports = {
-  copyPosts: copyPosts,
   walk: walk,
   isMarkdownFile: isMarkdownFile,
   getPart: getPart,
-  last: last
+  last: last,
+  deleteDir: deleteDir
 };

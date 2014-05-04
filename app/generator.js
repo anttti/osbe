@@ -5,7 +5,21 @@ const
   moment = require('moment'),
   Promise = require('bluebird'),
   _ = require('lodash'),
+  ncp = require('ncp'),
   utils = require('./utils');
+
+function copyPosts(settings) {
+  return new Promise(function(resolve, reject) {
+    utils.deleteDir(settings.distDir);
+    ncp(settings.postDir, settings.distDir, function(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(settings);
+      }
+    });
+  });
+}
 
 function createArchives(settings) {
   return new Promise(function(resolve, reject) {
@@ -20,12 +34,14 @@ function createLanding(settings) {
       landingPost = fs.readFileSync(path.join(landingIncDir, 'post.html'), 'utf-8');
 
   return new Promise(function(resolve, reject) {
-    var landingPageHtml = landingHeader;
+    var landingPageHtml = landingHeader.replace(/{{blogTitle}}/g, settings.blogTitle),
+        sortedPosts = settings.posts.sort(function(a, b) { return a.timestamp - b.timestamp; });
+
     utils.last(settings.postsOnLandingPage, settings.posts).forEach(function(post) {
-      landingPageHtml += landingPost.replace('{{link}}', post.postHtmlFileName)
-                                    .replace('{{title}}', post.title)
-                                    .replace('{{excerpt}}', post.excerpt)
-                                    .replace('{{date}}', moment(post.date).format(settings.dateFormat));
+      landingPageHtml += landingPost.replace(/{{link}}/g, post.postHtmlFileName)
+                                    .replace(/{{title}}/g, post.title)
+                                    .replace(/{{excerpt}}/g, post.excerpt)
+                                    .replace(/{{date}}/g, post.date)
     });
     landingPageHtml += landingFooter;
 
@@ -64,9 +80,11 @@ function _getPostContent(filePath, settings) {
       if (err) return reject(err);
 
       var splitText = text.split('\n'),
+          date = moment(splitText[0].replace('date: ', ''), 'YYYY-MM-DD hh:mm'),
           post = {
             title: splitText[1].replace('title: ', ''),
-            date: moment(splitText[0].replace('date: ', ''), 'YYYY-MM-DD hh:mm'),
+            date: date.format(settings.dateFormat),
+            timestamp: date.unix(),
             text: markdown.toHTML(splitText.slice(3, splitText.length).join('\n')),
             excerpt: markdown.toHTML(splitText[5]),
             filePath: filePath
@@ -98,13 +116,19 @@ function _writePost(settings) {
 
 function _compilePost(settings) {
   var postHeader = utils.getPart(path.join(settings.includeDir, 'post', 'header.html')),
-      postFooter = utils.getPart(path.join(settings.includeDir, 'post', 'footer.html')),
-      postHtml = postHeader.replace('{{title}}', settings.post.title) + settings.post.text + 
-                  postFooter.replace('{{date}}', settings.post.date.format(settings.dateFormat));
+      postFooter = utils.getPart(path.join(settings.includeDir, 'post', 'footer.html'));
+      postHtml = '';
+
+  postHtml += postHeader.replace(/{{title}}/g, settings.post.title)
+                        .replace(/{{blogTitle}}/g, settings.blogTitle);
+  postHtml += settings.post.text;
+  postHtml += postFooter.replace(/{{date}}/g, settings.post.date);
+
   return postHtml;
 }
 
 module.exports = {
+  copyPosts: copyPosts,
   processPosts: processPosts,
   createLanding: createLanding,
   createArchives: createArchives

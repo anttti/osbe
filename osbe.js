@@ -1,13 +1,8 @@
 #!/usr/bin/env node
 
-const
-  Promise = require('bluebird'),
-  generator = require('./app/generator'),
-  utils = require('./app/utils');
+const generator = require('./app/generator');
 
-const SETTINGS = require('./config');
-
-utils.copyPosts(SETTINGS)
+generator.copyPosts(require('./config'))
   .then(generator.processPosts)
   .then(generator.createLanding)
   .then(generator.createArchives)

@@ -1,4 +1,7 @@
 module.exports = {
+  // The title of the blog (duh)
+  blogTitle: 'Rarely needed',
+
   // Directory from which .md files are processed
   postDir: 'posts',
 
@@ -10,7 +13,7 @@ module.exports = {
 
   // Number of posts on landing page
   postsOnLandingPage: 2,
-  
+
   // Date format string for post publication dates,
   // anything from http://momentjs.com/docs/#/displaying/format/ works
   dateFormat: "dddd, MMMM Do YYYY, hh:mm"
