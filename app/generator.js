@@ -227,9 +227,10 @@ function _createListing(posts, fileName, data) {
  */
 function _appendArchiveLinks(listing) {
   return new Promise(function(resolve, reject) {
-    var archives = '<ul>', month;
+    var archives = '<ul class="archives">', month, date;
     for (month in listing.data.archiveMonths) {
-      archives += '<li><a href="' + month + '.html">' + month + '</a></li>'
+      date = moment(month, 'YYYY-MM');
+      archives += '<li><a href="' + month + '.html">' + date.format('MMMM YYYY') + '</a></li>'
     }
     archives += '</ul>';
     listing.html = utils.replaceTags(listing.html, { archives: archives });
