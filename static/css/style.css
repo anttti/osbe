@@ -9,6 +9,7 @@ html {
 
 body {
   margin: 1em auto;
+  padding: 0 1em;
   max-width: 700px;
 }
 
@@ -25,11 +26,6 @@ nav,
 section,
 summary {
   display: block;
-}
-
-[hidden],
-template {
-  display: none;
 }
 
 /* Links
@@ -58,9 +54,14 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Open Sans Condensed';
 }
 
-h1 {
+h1.site-header {
   font-size: 3.5em;
   margin: 0.67em 0;
+}
+
+h1.site-header a {
+  color: rgba(0,0,0,0.7);
+  text-decoration: none;
 }
 
 h2.post--title {
@@ -116,6 +117,7 @@ sub {
    ========================================================================== */
 
 img {
+  max-width: 100%;
   border: 0;
 }
 
@@ -139,12 +141,22 @@ hr {
   background-color: rgba(0,0,0,0.1);
 }
 
-pre {
+pre, code {
   overflow: auto;
   padding: 0.5em;
   border-radius: 5px;
   border: 1px solid rgba(0,0,0,0.1);
   background: rgba(150,150,150,0.1);
+}
+
+code {
+  padding: 0.1em;
+}
+
+pre code {
+  padding: 0;
+  border: none;
+  background: transparent;
 }
 
 code,
