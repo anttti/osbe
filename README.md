@@ -15,3 +15,18 @@ Just a simple static blog engine for my own personal needs. You will probably be
 See configuration options in `config.js`.
 
 Also check under `/includes`. By default everything under `/posts` will be copied to `/dist`, including any custom styles or custom pages.
+
+## Post format
+
+Posts need to be in the following format or else:
+
+```
+date: YYYY-MM-DD hh:mm
+title: My blog post
+
+# My blog post
+
+This first chapter will be used as the excerpt. OSBE is naively just taking the 5th index from an array that's created by reading this .md file in and splitting it by every \n.
+
+This second chapter and all that follows will only be displayed in the single post page.
+```
