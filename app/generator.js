@@ -28,16 +28,15 @@ function createArchives(settings) {
 }
 
 function createLanding(settings) {
-  var landingIncDir = path.join(settings.includeDir, 'landing'),
-      landingHeader = fs.readFileSync(path.join(landingIncDir, 'header.html'), 'utf-8'),
-      landingFooter = fs.readFileSync(path.join(landingIncDir, 'footer.html'), 'utf-8'),
-      landingPost = fs.readFileSync(path.join(landingIncDir, 'post.html'), 'utf-8');
+  var landingIncDir = path.join(settings.includes.dir, settings.includes.landing.dir),
+      landingHeader = fs.readFileSync(path.join(landingIncDir, settings.includes.landing.header), 'utf-8'),
+      landingFooter = fs.readFileSync(path.join(landingIncDir, settings.includes.landing.footer), 'utf-8'),
+      landingPost = fs.readFileSync(path.join(landingIncDir, settings.includes.landing.post), 'utf-8');
 
   return new Promise(function(resolve, reject) {
-    var landingPageHtml = landingHeader.replace(/{{blogTitle}}/g, settings.blogTitle),
-        sortedPosts = settings.posts.sort(function(a, b) { return a.timestamp - b.timestamp; });
+    var landingPageHtml = landingHeader.replace(/{{blogTitle}}/g, settings.blogTitle);
 
-    utils.last(settings.postsOnLandingPage, settings.posts).forEach(function(post) {
+    utils.first(settings.postsOnLandingPage, settings.posts).forEach(function(post) {
       landingPageHtml += landingPost.replace(/{{link}}/g, post.postHtmlFileName)
                                     .replace(/{{title}}/g, post.title)
                                     .replace(/{{excerpt}}/g, post.excerpt)
@@ -53,10 +52,9 @@ function createLanding(settings) {
 }
 
 function processPosts(settings) {
-  var postIncDir = path.join(settings.includeDir, 'post'),
-      landingIncDir = path.join(settings.includeDir, 'landing'),
-      postHeader = fs.readFileSync(path.join(postIncDir, 'header.html'), 'utf-8'),
-      postFooter = fs.readFileSync(path.join(postIncDir, 'footer.html'), 'utf-8');
+  var postIncDir = path.join(settings.includes.dir, settings.includes.post.dir),
+      postHeader = fs.readFileSync(path.join(postIncDir, settings.includes.post.header), 'utf-8'),
+      postFooter = fs.readFileSync(path.join(postIncDir, settings.includes.post.footer), 'utf-8');
 
   return new Promise(function(resolve, reject) {
     utils.walk(settings.distDir, function(err, filePaths) {
@@ -71,6 +69,13 @@ function processPosts(settings) {
         resolve(_.extend(settings, { posts: results }));
       });
     });
+  });
+}
+
+function sortPosts(settings) {
+  return new Promise(function(resolve, reject) {
+    settings.posts = settings.posts.sort(function(a, b) { return b.timestamp - a.timestamp; });
+    resolve(settings);
   });
 }
 
@@ -115,8 +120,9 @@ function _writePost(settings) {
 }
 
 function _compilePost(settings) {
-  var postHeader = utils.getPart(path.join(settings.includeDir, 'post', 'header.html')),
-      postFooter = utils.getPart(path.join(settings.includeDir, 'post', 'footer.html'));
+  var postIncDir = path.join(settings.includes.dir, settings.includes.post.dir),
+      postHeader = utils.getPart(path.join(postIncDir, settings.includes.post.header)),
+      postFooter = utils.getPart(path.join(postIncDir, settings.includes.post.footer));
       postHtml = '';
 
   postHtml += postHeader.replace(/{{title}}/g, settings.post.title)
@@ -130,6 +136,7 @@ function _compilePost(settings) {
 module.exports = {
   copyPosts: copyPosts,
   processPosts: processPosts,
+  sortPosts: sortPosts,
   createLanding: createLanding,
   createArchives: createArchives
 };

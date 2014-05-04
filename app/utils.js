@@ -41,6 +41,14 @@ function getPart(part) {
 }
 
 /**
+ * Pick first num items from arr
+ */
+function first(num, arr) {
+  if (arr.length < num) return arr;
+  return arr.slice(0, num);
+}
+
+/**
  * Pick last num items from arr
  */
 function last(num, arr) {
@@ -66,6 +74,7 @@ module.exports = {
   walk: walk,
   isMarkdownFile: isMarkdownFile,
   getPart: getPart,
+  first: first,
   last: last,
   deleteDir: deleteDir
 };

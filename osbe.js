@@ -4,6 +4,7 @@ const generator = require('./app/generator');
 
 generator.copyPosts(require('./config'))
   .then(generator.processPosts)
+  .then(generator.sortPosts)
   .then(generator.createLanding)
   .then(generator.createArchives)
   .catch(function(e) {

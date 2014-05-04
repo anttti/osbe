@@ -6,7 +6,20 @@ module.exports = {
   postDir: 'posts',
 
   // Include directory (headers, footers)
-  includeDir: 'includes',
+  includes: {
+    dir: 'includes',
+    post: {
+      dir: 'post',
+      header: 'header.html',
+      footer: 'footer.html'
+    },
+    landing: {
+      dir: 'landing',
+      header: 'header.html',
+      footer: 'footer.html',
+      post: 'post.html'
+    }
+  },
 
   // Destination directory for the compiled end product
   distDir: 'dist',
