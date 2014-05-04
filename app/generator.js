@@ -78,12 +78,8 @@ function _getPostContent(filePath, settings) {
 }
 
 function _writePost(settings) {
-  var postHeader = utils.getPart(path.join(settings.includeDir, 'post', 'header.html')),
-      postFooter = utils.getPart(path.join(settings.includeDir, 'post', 'footer.html'));
-
   return new Promise(function(resolve, reject) {
-    var postHtml = postHeader.replace('{{title}}', settings.post.title) + settings.post.text + 
-                    postFooter.replace('{{date}}', settings.post.date.format(settings.dateFormat)),
+    var postHtml = _compilePost(settings),
         postHtmlFileName = settings.post.filePath.replace('.md', '.html'),
         postClone = _.cloneDeep(settings.post);
     fs.writeFile(postHtmlFileName, postHtml, function(err) {
@@ -98,6 +94,14 @@ function _writePost(settings) {
       }
     });
   });
+}
+
+function _compilePost(settings) {
+  var postHeader = utils.getPart(path.join(settings.includeDir, 'post', 'header.html')),
+      postFooter = utils.getPart(path.join(settings.includeDir, 'post', 'footer.html')),
+      postHtml = postHeader.replace('{{title}}', settings.post.title) + settings.post.text + 
+                  postFooter.replace('{{date}}', settings.post.date.format(settings.dateFormat));
+  return postHtml;
 }
 
 module.exports = {
