@@ -16,11 +16,19 @@ See configuration options in `config.js`.
 
 Also check under `/includes`. By default everything under `/posts` will be copied to `/dist`, including any custom styles or custom pages.
 
+### Special tags available in includes
+
+- `{{blogTitle}}`
+- `{{date}}`
+- `{{title}}`
+- `{{excerpt}}`
+- `{{link}}`
+
 ## Post format
 
 Posts need to be in the following format or else:
 
-```
+```md
 date: YYYY-MM-DD hh:mm
 title: My blog post
 
