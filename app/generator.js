@@ -60,10 +60,24 @@ function sortPosts(data) {
   });
 }
 
-// TODO: Create archive pages (Yearly? Monthly?)
+/**
+ *
+ */
 function createArchives(data) {
   return new Promise(function(resolve, reject) {
-    resolve(data);
+    var months = utils.collectMonths(data.posts),
+        fileWrites = [],
+        config = _.cloneDeep(data.config),
+        month;
+    for (month in months) {
+      fileWrites.push(_createListing(months[month], month + '.html', data)
+        .then(_appendArchiveLinks)
+        .then(_writeListingToFile)
+      );
+    }
+    Promise.all(fileWrites).then(function(results) {
+      resolve(_.extend(data, { archiveMonths: months }));
+    });
   });
 }
 
@@ -71,26 +85,13 @@ function createArchives(data) {
  * Generate the landing page with X last post excerpts
  */
 function createLanding(data) {
-  var landingIncDir = path.join(data.config.includes.dir, data.config.includes.landing.dir),
-      landingHeader = fs.readFileSync(path.join(landingIncDir, data.config.includes.landing.header), 'utf-8'),
-      landingFooter = fs.readFileSync(path.join(landingIncDir, data.config.includes.landing.footer), 'utf-8'),
-      landingPost = fs.readFileSync(path.join(landingIncDir, data.config.includes.landing.post), 'utf-8');
-
   return new Promise(function(resolve, reject) {
-    var landingPageHtml = landingHeader.replace(/{{blogTitle}}/g, data.config.blogTitle);
-
-    utils.first(data.config.postsOnLandingPage, data.posts).forEach(function(post) {
-      landingPageHtml += utils.replaceTags(landingPost, { link: post.postHtmlFileName,
-                                                         title: post.title,
-                                                         excerpt: post.excerpt,
-                                                         date: post.date });
-    });
-    landingPageHtml += landingFooter;
-
-    fs.writeFile(path.join(data.config.distDir, 'index.html'), landingPageHtml, function(err) {
-      if (err) return reject(err);
-      resolve(data);
-    });
+    _createListing(utils.first(data.config.postsOnLandingPage, data.posts), 'index.html', data)
+      .then(_appendArchiveLinks)
+      .then(_writeListingToFile)
+      .then(function() {
+        resolve(data);
+      });
   });
 }
 
@@ -117,7 +118,7 @@ function _getPostContent(filePath, config) {
           post = {
             title: splitText[1].replace('title: ', ''),
             date: date.format(config.dateFormat),
-            timestamp: date.unix(),
+            timestamp: date.valueOf(),
             text: markdown.toHTML(splitText.slice(3, splitText.length).join('\n')),
             excerpt: markdown.toHTML(splitText[5]),
             filePath: filePath
@@ -165,6 +166,54 @@ function _compilePost(config) {
                                            date: config.post.date });
 
   return postHtml;
+}
+
+/**
+ * Creates a listing HTML file from an array of posts.
+ * Used to generate index.html and archive pages (one per month)
+ */
+function _createListing(posts, fileName, data) {
+  var listingIncDir = path.join(data.config.includes.dir, data.config.includes.listing.dir),
+      listingHeader = fs.readFileSync(path.join(listingIncDir, data.config.includes.listing.header), 'utf-8'),
+      listingFooter = fs.readFileSync(path.join(listingIncDir, data.config.includes.listing.footer), 'utf-8'),
+      listingPost = fs.readFileSync(path.join(listingIncDir, data.config.includes.listing.post), 'utf-8');
+
+  return new Promise(function(resolve, reject) {
+    var listingPageHtml = utils.replaceTags(listingHeader, { blogTitle: data.config.blogTitle });
+    posts.forEach(function(post) {
+      listingPageHtml += utils.replaceTags(listingPost, { link: post.postHtmlFileName,
+                                                         title: post.title,
+                                                         excerpt: post.excerpt,
+                                                         date: post.date });
+    });
+    listingPageHtml += listingFooter;
+
+    resolve({ html: listingPageHtml, fileName: fileName, dir: data.config.distDir, data: data });
+  });
+}
+
+function _appendArchiveLinks(listing) {
+  return new Promise(function(resolve, reject) {
+    var archives = '<ul>', month;
+    for (month in listing.data.archiveMonths) {
+      archives += '<li><a href="' + month + '.html">' + month + '</a></li>'
+    }
+    archives += '</ul>';
+    listing.html = utils.replaceTags(listing.html, { archives: archives });
+    resolve(listing);
+  });
+}
+
+/**
+ * Writes a listing page to file
+ */
+function _writeListingToFile(listing) {
+  return new Promise(function(resolve, reject) {
+    fs.writeFile(path.join(listing.dir, listing.fileName), listing.html, function(err) {
+      if (err) return reject(err);
+      resolve();
+    });
+  });
 }
 
 module.exports = {

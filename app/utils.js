@@ -2,6 +2,8 @@ const
   fs = require('fs'),
   path = require('path'),
   ncp = require('ncp'),
+  moment = require('moment'),
+  _ = require('lodash'),
   Promise = require('bluebird');
 
 /**
@@ -94,6 +96,19 @@ function replaceTags(text, tags) {
   return text;
 }
 
+function collectMonths(posts) {
+  return posts.reduce(function(acc, curr) {
+    var date = moment(curr.timestamp),
+        yearMonthStr = date.format('YYYY-MM');
+    if (!acc[yearMonthStr]) {
+      acc[yearMonthStr] = [curr];
+    } else {
+      acc[yearMonthStr].push(curr);
+    }
+    return acc;
+  }, {});
+}
+
 module.exports = {
   walk: walk,
   isMarkdownFile: isMarkdownFile,
@@ -101,5 +116,6 @@ module.exports = {
   first: first,
   last: last,
   deleteDir: deleteDir,
-  replaceTags: replaceTags
+  replaceTags: replaceTags,
+  collectMonths: collectMonths
 };

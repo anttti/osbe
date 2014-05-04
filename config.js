@@ -13,8 +13,8 @@ module.exports = {
       header: 'header.html',
       footer: 'footer.html'
     },
-    landing: {
-      dir: 'landing',
+    listing: {
+      dir: 'listing',
       header: 'header.html',
       footer: 'footer.html',
       post: 'post.html'
