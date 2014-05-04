@@ -9,4 +9,5 @@ generator.copyPosts(config)
   .then(generator.generateArchives)
   .then(generator.createArchives)
   .then(generator.createLanding)
+  .then(generator.copyResources)
   .done(generator.done);

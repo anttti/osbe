@@ -1,9 +1,11 @@
 module.exports = function(start) {
   return {
-    start: start,
-
     // The title of the blog (duh)
     blogTitle: 'Rarely needed',
+
+    // Directory for static resources (e.g. CSS, fonts)
+    // Copied as-is to distDir
+    resourceDir: 'static',
 
     // Directory from which .md files are processed
     postDir: 'posts',
@@ -32,6 +34,9 @@ module.exports = function(start) {
 
     // Date format string for post publication dates,
     // anything from http://momentjs.com/docs/#/displaying/format/ works
-    dateFormat: "dddd, MMMM Do YYYY, hh:mm"
+    dateFormat: "dddd, MMMM Do YYYY, hh:mm",
+
+    // Start timestamp (don't touch)
+    start: start
   }
 }

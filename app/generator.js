@@ -102,6 +102,18 @@ function createLanding(data) {
   });
 }
 
+function copyResources(data) {
+  return new Promise(function(resolve, reject) {
+    ncp(data.config.resourceDir, data.config.distDir, function(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+
 function done(data) {
   var now = new Date().getTime(),
       delta = (now - data.config.start) / 1000;
@@ -236,5 +248,6 @@ module.exports = {
   generateArchives: generateArchives,
   createArchives: createArchives,
   createLanding: createLanding,
+  copyResources: copyResources,
   done: done
 };
