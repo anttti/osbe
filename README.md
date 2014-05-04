@@ -46,3 +46,8 @@ Regular markdown works, OSBE uses [markdown-js](https://github.com/evilstreak/ma
 ## Great, but where's support for...
 
 Sass? LESS? Haml? No, no, nope, sorry.
+
+## TODO
+
+- Simple client-side search
+- Tests...
