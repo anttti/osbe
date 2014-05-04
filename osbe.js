@@ -1,15 +1,11 @@
 #!/usr/bin/env node
 
-const generator = require('./app/generator');
+const generator = require('./app/generator'),
+      config = require('./config');
 
-generator.copyPosts(require('./config'))
+generator.copyPosts(config)
   .then(generator.processPosts)
   .then(generator.sortPosts)
-  .then(generator.createLanding)
   .then(generator.createArchives)
-  .catch(function(e) {
-    console.log("An error occurred", e);
-  })
-  .done(function() {
-    console.log("All done!");
-  });
+  .then(generator.createLanding)
+  .done(generator.done);
