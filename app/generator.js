@@ -44,10 +44,10 @@ function createLanding(settings) {
     var landingPageHtml = landingHeader.replace(/{{blogTitle}}/g, settings.blogTitle);
 
     utils.first(settings.postsOnLandingPage, settings.posts).forEach(function(post) {
-      landingPageHtml += landingPost.replace(/{{link}}/g, post.postHtmlFileName)
-                                    .replace(/{{title}}/g, post.title)
-                                    .replace(/{{excerpt}}/g, post.excerpt)
-                                    .replace(/{{date}}/g, post.date)
+      landingPageHtml += utils.replaceTags(landingPost, { link: post.postHtmlFileName,
+                                                         title: post.title,
+                                                         excerpt: post.excerpt,
+                                                         date: post.date });
     });
     landingPageHtml += landingFooter;
 
