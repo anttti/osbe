@@ -4,12 +4,14 @@ Just a simple static blog engine for my own personal needs. You will probably be
 
 ## Usage
 
-- run npm install
-- write blog posts as .md files under /posts/[YEAR]/[MONTH]/[DAY]
-- run ./osbe.js
-- put the contents of the /dist directory on the web somewhere
+- run `npm install`
+- write blog posts as `.md` files under `/posts/[YEAR]/[MONTH]/[DAY]`
+- run `./osbe.js`
+- put the contents of the `/dist` directory on the web somewhere
 - profit
 
 ## Customization
 
-Check under /includes. Also everything under /posts will be copied to /dist, including any custom styles or custom pages.
+See configuration options in `config.js`.
+
+Also check under `/includes`. By default everything under `/posts` will be copied to `/dist`, including any custom styles or custom pages.

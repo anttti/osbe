@@ -1,16 +1,11 @@
+#!/usr/bin/env node
+
 const
   Promise = require('bluebird'),
   generator = require('./app/generator'),
   utils = require('./app/utils');
 
-// Settings
-const SETTINGS = {
-  postDir: 'posts',
-  includeDir: 'includes',
-  distDir: 'dist',
-  postsOnLandingPage: 2,
-  dateFormat: "dddd, MMMM Do YYYY, hh:mm"
-};
+const SETTINGS = require('./config');
 
 utils.copyPosts(SETTINGS)
   .then(generator.processPosts)

@@ -8,7 +8,6 @@ const
   utils = require('./utils');
 
 function createArchives(settings) {
-  console.log("Create archives");
   return new Promise(function(resolve, reject) {
     resolve(settings);
   });
