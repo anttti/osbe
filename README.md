@@ -2,6 +2,10 @@
 
 Just a simple static blog engine for my own personal needs. You will probably be better off using [Jekyll](https://github.com/jekyll/jekyll) or something.
 
+## Demo
+
+OSBE generates stuff [like this](http://alupark.fi/osbe/).
+
 ## Usage
 
 - run `npm install`
