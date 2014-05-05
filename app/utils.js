@@ -103,6 +103,14 @@ function replaceTags(text, tags) {
   return text;
 }
 
+/**
+ * Group posts to arrays in an object
+ * End up with
+ * {
+ *   2014-05: [post1, post2, post3], 
+ *   2014-06: [post1, post2],
+ * }
+ */
 function collectMonths(posts) {
   'use strict';
   return posts.reduce(function(acc, curr) {
@@ -117,6 +125,29 @@ function collectMonths(posts) {
   }, {});
 }
 
+/**
+ * Generate next and prev month urls
+ */
+function getNextPrevUrls(index, months) {
+  if (index === 0) {
+    nextMonthUrl = '';
+    prevMonthUrl = months[index + 1] + '.html';
+  } else {
+    if (index - 1 === 0) {
+      nextMonthUrl = 'index.html';
+    } else {
+      nextMonthUrl = months[index - 1] + '.html';
+    }
+    if (index + 1 < months.length) {
+      prevMonthUrl = months[index + 1] + '.html';
+    } else {
+      prevMonthUrl = '';
+    }
+  }
+
+  return { prevMonthUrl: prevMonthUrl, nextMonthUrl: nextMonthUrl };
+}
+
 module.exports = {
   walk: walk,
   isMarkdownFile: isMarkdownFile,
@@ -125,5 +156,6 @@ module.exports = {
   last: last,
   deleteDir: deleteDir,
   replaceTags: replaceTags,
-  collectMonths: collectMonths
+  collectMonths: collectMonths,
+  getNextPrevUrls: getNextPrevUrls
 };

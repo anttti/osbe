@@ -46,6 +46,13 @@ a:hover {
   color: #44c0df;
 }
 
+a[href=''] {
+  pointer-events: none;
+  cursor: default;
+  color: rgba(0,0,0,0.2);
+  text-decoration: none;
+}
+
 /* Text-level semantics
    ========================================================================== */
 
@@ -276,6 +283,22 @@ th {
       color: white;
       text-decoration: underline;
     }
+
+/* Listing page
+   ========================================================================== */
+
+.month-title {
+  text-align: center;
+  font-weight: 100;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 1.5em;
+  color: rgba(0,0,0,0.3);
+}
+
+.page-nav {
+  text-align: center;
+}
 
 /* Post page
    ========================================================================== */

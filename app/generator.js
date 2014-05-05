@@ -75,13 +75,15 @@ function createArchives(data) {
   'use strict';
   return new Promise(function(resolve, reject) {
     var fileWrites = [],
-        config = _.cloneDeep(data.config);
-    for (var month in data.archiveMonths) {
-      fileWrites.push(_createListing(data.archiveMonths[month], month + '.html', data)
+        months = _.keys(data.archiveMonths).sort().reverse();
+    
+    months.forEach(function(month, index) {
+      fileWrites.push(_createListing(data.archiveMonths[month], month + '.html', index, months, data)
         .then(_appendArchiveLinks)
         .then(_writeListingToFile)
       );
-    }
+    });
+    
     Promise.all(fileWrites).then(function() {
       resolve(data);
     });
@@ -93,8 +95,10 @@ function createArchives(data) {
  */
 function createLanding(data) {
   'use strict';
+  var months = _.keys(data.archiveMonths).sort().reverse();
+
   return new Promise(function(resolve, reject) {
-    _createListing(utils.first(data.config.postsOnLandingPage, data.posts), 'index.html', data)
+    _createListing(data.archiveMonths[months[0]], 'index.html', 0, months, data)
       .then(_appendArchiveLinks)
       .then(_writeListingToFile)
       .then(function() {
@@ -200,22 +204,28 @@ function _compilePost(config) {
  * Creates a listing HTML file from an array of posts.
  * Used to generate index.html and archive pages (one per month)
  */
-function _createListing(posts, fileName, data) {
+function _createListing(posts, fileName, index, months, data) {
   'use strict';
   var listingIncDir = path.join(data.config.includes.dir, data.config.includes.listing.dir),
       listingHeader = utils.getPart(path.join(listingIncDir, data.config.includes.listing.header)),
       listingFooter = utils.getPart(path.join(listingIncDir, data.config.includes.listing.footer)),
-      listingPost = utils.getPart(path.join(listingIncDir, data.config.includes.listing.post));
+      listingPost = utils.getPart(path.join(listingIncDir, data.config.includes.listing.post)),
+      nextPrevUrls = utils.getNextPrevUrls(index, months),
+      nextMonthUrl = nextPrevUrls.nextMonthUrl,
+      prevMonthUrl = nextPrevUrls.prevMonthUrl,
+      monthTitle = moment(months[index], 'YYYY-MM').format('MMMM, YYYY');
 
   return new Promise(function(resolve, reject) {
-    var listingPageHtml = utils.replaceTags(listingHeader, { blogTitle: data.config.blogTitle });
+    var listingPageHtml = utils.replaceTags(listingHeader, { blogTitle: data.config.blogTitle,
+                                                             monthTitle: monthTitle });
     posts.forEach(function(post) {
       listingPageHtml += utils.replaceTags(listingPost, { link: post.postHtmlFileName,
                                                          title: post.title,
                                                          excerpt: post.excerpt,
                                                          date: post.date });
     });
-    listingPageHtml += listingFooter;
+    listingPageHtml += utils.replaceTags(listingFooter, { nextMonthUrl: nextMonthUrl,
+                                                          prevMonthUrl: prevMonthUrl });
 
     resolve({ html: listingPageHtml, fileName: fileName, dir: data.config.distDir, data: data });
   });
