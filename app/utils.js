@@ -10,7 +10,7 @@ const
  * Recursively walk through a directory
  * and return a list of files
  */
-var walk = function(dir, done) {
+function walk(dir, done) {
   var results = [];
   fs.readdir(dir, function(err, list) {
     if (err) return done(err);
@@ -81,7 +81,7 @@ function deleteDir(dir) {
     });
     fs.rmdirSync(dir);
   }
-};
+}
 
 /**
  * Replace all tags in the given text

@@ -1,4 +1,4 @@
-const 
+const
   fs = require('fs'),
   path = require('path'),
   markdown = require('markdown').markdown,
@@ -192,7 +192,7 @@ function _compilePost(config) {
       postHtml = postHeader + config.post.text + postFooter;
 
   postHtml = utils.replaceTags(postHtml, { title: config.post.title,
-                                           blogTitle: config.blogTitle,  
+                                           blogTitle: config.blogTitle,
                                            date: config.post.date });
 
   return postHtml;

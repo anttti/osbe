@@ -38,5 +38,5 @@ module.exports = function(start) {
 
     // Start timestamp (don't touch)
     start: start
-  }
-}
+  };
+};
