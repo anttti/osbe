@@ -215,7 +215,7 @@ function _createListing(posts, fileName, data) {
  */
 function _appendArchiveLinks(listing) {
   return new Promise(function(resolve, reject) {
-    var archives = '<ul class="archives">', month, date;
+    var archives = '<ul class="archives--list">', month, date;
     for (month in listing.data.archiveMonths) {
       date = moment(month, 'YYYY-MM');
       archives += '<li><a href="' + month + '.html">' + date.format('MMMM YYYY') + '</a></li>';
