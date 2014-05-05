@@ -53,7 +53,6 @@ Sass? LESS? Haml? No, no, nope, sorry.
 
 ## TODO
 
-- Paging
 - RSS feed
 - Simple client-side search
 - Tests...
