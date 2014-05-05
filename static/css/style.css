@@ -79,7 +79,7 @@ h2.post--title a:hover {
 }
 
 p {
-  margin: 0 0 1em 0;
+  margin: 1em 0;
   font-size: 1.1em;
   line-height: 150%;
 }
@@ -112,6 +112,13 @@ sup {
 
 sub {
   bottom: -0.25em;
+}
+
+blockquote {
+  border-left: 5px solid rgba(0,0,0,0.1);
+  padding-left: 1em;
+  opacity: 0.7;
+  margin: 1em;
 }
 
 /* Embedded content
