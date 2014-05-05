@@ -54,6 +54,5 @@ Sass? LESS? Haml? Tags? No, no, nope, sorry.
 ## TODO
 
 - Permalinks
-- RSS feed
 - Simple client-side search
 - Tests...
