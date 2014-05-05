@@ -43,11 +43,13 @@ This second chapter and all that follows will only be displayed in the single po
 
 Regular markdown works, OSBE uses [markdown-js](https://github.com/evilstreak/markdown-js) to parse it.
 
-## Great, but where's support for...
+## Great, but where's the support for...
 
 Sass? LESS? Haml? No, no, nope, sorry.
 
 ## TODO
 
+- Paging
+- RSS feed
 - Simple client-side search
 - Tests...
