@@ -5,22 +5,16 @@ const
   moment = require('moment'),
   Promise = require('bluebird'),
   _ = require('lodash'),
-  ncp = require('ncp'),
+  ncp = Promise.promisify(require('ncp')),
   utils = require('./utils');
 
 /**
  * Copy the whole /posts -dir to /dist
  */
 function copyPosts(config) {
-  return new Promise(function(resolve, reject) {
-    utils.deleteDir(config.distDir);
-    ncp(config.postDir, config.distDir, function(err) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ config: config });
-      }
-    });
+  utils.deleteDir(config.distDir);
+  return ncp(config.postDir, config.distDir).then(function() {
+    return { config: config };
   });
 }
 
@@ -108,14 +102,8 @@ function createLanding(data) {
  * Copy static resources to /dist
  */
 function copyResources(data) {
-  return new Promise(function(resolve, reject) {
-    ncp(data.config.resourceDir, data.config.distDir, function(err) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
+  return ncp(data.config.resourceDir, data.config.distDir).then(function() {
+    return data;
   });
 }
 
