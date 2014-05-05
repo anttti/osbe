@@ -49,10 +49,11 @@ Regular markdown works, OSBE uses [markdown-js](https://github.com/evilstreak/ma
 
 ## Great, but where's the support for...
 
-Sass? LESS? Haml? No, no, nope, sorry.
+Sass? LESS? Haml? Tags? No, no, nope, sorry.
 
 ## TODO
 
+- Permalinks
 - RSS feed
 - Simple client-side search
 - Tests...
