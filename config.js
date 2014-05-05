@@ -3,6 +3,12 @@ module.exports = function(start) {
     // The title of the blog (duh)
     blogTitle: 'Rarely needed',
 
+    // The author of the blog
+    author: 'Antti Mattila',
+
+    // The url of the blog
+    siteUrl: 'http://alupark.fi/osbe/',
+
     // Directory for static resources (e.g. CSS, fonts)
     // Copied as-is to distDir
     resourceDir: 'static',
@@ -35,6 +41,13 @@ module.exports = function(start) {
     // Date format string for post publication dates,
     // anything from http://momentjs.com/docs/#/displaying/format/ works
     dateFormat: "dddd, MMMM Do YYYY, hh:mm",
+
+    // RSS configuration options
+    rss: {
+      title: 'Rarely needed',
+      description: 'Lorem ipsum dolor sit amet',
+      fileName: 'rss.xml'
+    },
 
     // Start timestamp (don't touch)
     start: start
