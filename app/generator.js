@@ -230,7 +230,7 @@ function _appendArchiveLinks(listing) {
     var archives = '<ul class="archives">', month, date;
     for (month in listing.data.archiveMonths) {
       date = moment(month, 'YYYY-MM');
-      archives += '<li><a href="' + month + '.html">' + date.format('MMMM YYYY') + '</a></li>'
+      archives += '<li><a href="' + month + '.html">' + date.format('MMMM YYYY') + '</a></li>';
     }
     archives += '</ul>';
     listing.html = utils.replaceTags(listing.html, { archives: archives });
