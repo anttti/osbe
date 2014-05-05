@@ -12,6 +12,7 @@ const
  * Copy the whole /posts -dir to /dist
  */
 function copyPosts(config) {
+  'use strict';
   utils.deleteDir(config.distDir);
   return ncp(config.postDir, config.distDir).then(function() {
     return { config: config };
@@ -22,6 +23,7 @@ function copyPosts(config) {
  * Transform all .md files under /dist into .html
  */
 function processPosts(data) {
+  'use strict';
   var postIncDir = path.join(data.config.includes.dir, data.config.includes.post.dir),
       postHeader = fs.readFileSync(path.join(postIncDir, data.config.includes.post.header), 'utf-8'),
       postFooter = fs.readFileSync(path.join(postIncDir, data.config.includes.post.footer), 'utf-8');
@@ -48,6 +50,7 @@ function processPosts(data) {
  * Sort posts chronologically
  */
 function sortPosts(data) {
+  'use strict';
   return new Promise(function(resolve, reject) {
     data.posts = data.posts.sort(function(a, b) { return b.timestamp - a.timestamp; });
     resolve(data);
@@ -58,6 +61,7 @@ function sortPosts(data) {
  * Collect posts to months
  */
 function generateArchives(data) {
+  'use strict';
   return new Promise(function(resolve, reject) {
     var months = utils.collectMonths(data.posts);
     resolve(_.extend(data, { archiveMonths: months }));
@@ -68,11 +72,11 @@ function generateArchives(data) {
  * Create the actual archive HTML pages
  */
 function createArchives(data) {
+  'use strict';
   return new Promise(function(resolve, reject) {
     var fileWrites = [],
-        config = _.cloneDeep(data.config),
-        month;
-    for (month in data.archiveMonths) {
+        config = _.cloneDeep(data.config);
+    for (var month in data.archiveMonths) {
       fileWrites.push(_createListing(data.archiveMonths[month], month + '.html', data)
         .then(_appendArchiveLinks)
         .then(_writeListingToFile)
@@ -88,6 +92,7 @@ function createArchives(data) {
  * Generate the landing page with X last post excerpts
  */
 function createLanding(data) {
+  'use strict';
   return new Promise(function(resolve, reject) {
     _createListing(utils.first(data.config.postsOnLandingPage, data.posts), 'index.html', data)
       .then(_appendArchiveLinks)
@@ -102,6 +107,7 @@ function createLanding(data) {
  * Copy static resources to /dist
  */
 function copyResources(data) {
+  'use strict';
   return ncp(data.config.resourceDir, data.config.distDir).then(function() {
     return data;
   });
@@ -111,6 +117,7 @@ function copyResources(data) {
  * Print out some benchmarking data and greets when doen
  */
 function done(data) {
+  'use strict';
   var now = new Date().getTime(),
       delta = (now - data.config.start) / 1000;
   console.log('\nAll done! "' + data.config.blogTitle + '" compiled to /' + data.config.distDir + '.\n' +
@@ -127,6 +134,7 @@ function done(data) {
  * convert it into HTML
  */
 function _getPostContent(filePath, config) {
+  'use strict';
   return new Promise(function(resolve, reject) {
     fs.readFile(filePath, 'utf-8', function(err, text) {
       if (err) return reject(err);
@@ -151,6 +159,7 @@ function _getPostContent(filePath, config) {
  * Write a single post to file
  */
 function _writePostToFile(config) {
+  'use strict';
   return new Promise(function(resolve, reject) {
     var postHtml = _compilePost(config),
         postHtmlFileName = config.post.filePath.replace('.md', '.html'),
@@ -174,9 +183,10 @@ function _writePostToFile(config) {
  * and a footer. Go through the file and replace {{tags}}.
  */
 function _compilePost(config) {
+  'use strict';
   var postIncDir = path.join(config.includes.dir, config.includes.post.dir),
       postHeader = utils.getPart(path.join(postIncDir, config.includes.post.header)),
-      postFooter = utils.getPart(path.join(postIncDir, config.includes.post.footer));
+      postFooter = utils.getPart(path.join(postIncDir, config.includes.post.footer)),
       postHtml = postHeader + config.post.text + postFooter;
 
   postHtml = utils.replaceTags(postHtml, { title: config.post.title,
@@ -191,6 +201,7 @@ function _compilePost(config) {
  * Used to generate index.html and archive pages (one per month)
  */
 function _createListing(posts, fileName, data) {
+  'use strict';
   var listingIncDir = path.join(data.config.includes.dir, data.config.includes.listing.dir),
       listingHeader = utils.getPart(path.join(listingIncDir, data.config.includes.listing.header)),
       listingFooter = utils.getPart(path.join(listingIncDir, data.config.includes.listing.footer)),
@@ -214,6 +225,7 @@ function _createListing(posts, fileName, data) {
  * Generate and append archive page links
  */
 function _appendArchiveLinks(listing) {
+  'use strict';
   return new Promise(function(resolve, reject) {
     var archives = '<ul class="archives--list">', month, date;
     for (month in listing.data.archiveMonths) {
@@ -230,6 +242,7 @@ function _appendArchiveLinks(listing) {
  * Writes a listing page to file
  */
 function _writeListingToFile(listing) {
+  'use strict';
   return new Promise(function(resolve, reject) {
     fs.writeFile(path.join(listing.dir, listing.fileName), listing.html, function(err) {
       if (err) return reject(err);

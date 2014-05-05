@@ -11,6 +11,7 @@ const
  * and return a list of files
  */
 function walk(dir, done) {
+  'use strict';
   var results = [];
   fs.readdir(dir, function(err, list) {
     if (err) return done(err);
@@ -34,6 +35,7 @@ function walk(dir, done) {
 }
 
 function isMarkdownFile(filePath) {
+  'use strict';
   return /.md$/.test(filePath);
 }
 
@@ -43,6 +45,7 @@ function isMarkdownFile(filePath) {
  */
 var parts = {};
 function getPart(part) {
+  'use strict';
   if (parts[part]) {
     return parts[part];
   }
@@ -54,6 +57,7 @@ function getPart(part) {
  * Pick first num items from arr
  */
 function first(num, arr) {
+  'use strict';
   if (arr.length < num) return arr;
   return arr.slice(0, num);
 }
@@ -62,6 +66,7 @@ function first(num, arr) {
  * Pick last num items from arr
  */
 function last(num, arr) {
+  'use strict';
   if (arr.length < num) return arr;
   return arr.slice(arr.length - num, arr.length);
 }
@@ -70,6 +75,7 @@ function last(num, arr) {
  * Synchronously delete a directory and it's subdirectories
  */
 function deleteDir(dir) {
+  'use strict';
   if (fs.existsSync(dir)) {
     fs.readdirSync(dir).forEach(function(file, index) {
       var currentDir = path.join(dir, file);
@@ -89,6 +95,7 @@ function deleteDir(dir) {
  * to the tags and values to the strings to replace with
  */
 function replaceTags(text, tags) {
+  'use strict';
   for (var tag in tags) {
     var re = new RegExp('{{' + tag + '}}', 'g');
     text = text.replace(re, tags[tag]);
@@ -97,6 +104,7 @@ function replaceTags(text, tags) {
 }
 
 function collectMonths(posts) {
+  'use strict';
   return posts.reduce(function(acc, curr) {
     var date = moment(curr.timestamp),
         yearMonthStr = date.format('YYYY-MM');
