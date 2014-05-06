@@ -24,9 +24,6 @@ function copyPosts(config) {
  */
 function processPosts(data) {
   'use strict';
-  var postIncDir = path.join(data.config.includes.dir, data.config.includes.post.dir),
-      postHeader = fs.readFileSync(path.join(postIncDir, data.config.includes.post.header), 'utf-8'),
-      postFooter = fs.readFileSync(path.join(postIncDir, data.config.includes.post.footer), 'utf-8');
 
   return new Promise(function(resolve, reject) {
     utils.walk(data.config.distDir, function(err, filePaths) {
@@ -151,7 +148,8 @@ function _getPostContent(filePath, config) {
             timestamp: date.valueOf(),
             text: markdown.toHTML(splitText.slice(3, splitText.length).join('\n')),
             excerpt: markdown.toHTML(splitText[5]),
-            filePath: filePath
+            filePath: filePath,
+            postHtmlFileName: filePath.replace('.md', '.html').replace(config.distDir + '/', ''),
           };
 
       resolve(_.extend(config, { post: post }));
@@ -166,16 +164,13 @@ function _writePostToFile(config) {
   'use strict';
   return new Promise(function(resolve, reject) {
     var postHtml = _compilePost(config),
-        postHtmlFileName = config.post.filePath.replace('.md', '.html'),
+        distPostHtmlFileName = config.post.filePath.replace('.md', '.html'),
         postClone = _.cloneDeep(config.post);
-    fs.writeFile(postHtmlFileName, postHtml, function(err) {
+    fs.writeFile(distPostHtmlFileName, postHtml, function(err) {
       if (err) {
         reject(err);
       } else {
-        var post = _.extend(postClone, {
-          html: postHtml,
-          postHtmlFileName: postHtmlFileName.replace(config.distDir + '/', '')
-        });
+        var post = _.extend(postClone, { html: postHtml });
         resolve(post);
       }
     });
@@ -195,7 +190,8 @@ function _compilePost(config) {
 
   postHtml = utils.replaceTags(postHtml, { title: config.post.title,
                                            blogTitle: config.blogTitle,
-                                           date: config.post.date });
+                                           date: config.post.date,
+                                           link: config.siteUrl + config.post.postHtmlFileName });
 
   return postHtml;
 }
@@ -219,7 +215,7 @@ function _createListing(posts, fileName, index, months, data) {
     var listingPageHtml = utils.replaceTags(listingHeader, { blogTitle: data.config.blogTitle,
                                                              monthTitle: monthTitle });
     posts.forEach(function(post) {
-      listingPageHtml += utils.replaceTags(listingPost, { link: post.postHtmlFileName,
+      listingPageHtml += utils.replaceTags(listingPost, { link: data.config.siteUrl + post.postHtmlFileName,
                                                          title: post.title,
                                                          excerpt: post.excerpt,
                                                          date: post.date });

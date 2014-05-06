@@ -98,6 +98,11 @@ small.post--date {
   color: rgba(0,0,0,0.3);
 }
 
+  .post--date__center {
+    text-align: center;
+    line-height: 200%;
+  }
+
 sub,
 sup {
   font-size: 75%;

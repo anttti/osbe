@@ -7,7 +7,7 @@ module.exports = function(start) {
     author: 'Antti Mattila',
 
     // The url of the blog
-    siteUrl: 'http://alupark.fi/osbe/',
+    siteUrl: 'http://localhost:8000/',
 
     // Directory for static resources (e.g. CSS, fonts)
     // Copied as-is to distDir

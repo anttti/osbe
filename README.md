@@ -53,6 +53,6 @@ Sass? LESS? Haml? Tags? No, no, nope, sorry.
 
 ## TODO
 
-- Permalinks
+- Allow link posting
 - Simple client-side search
 - Tests...
